@@ -7,7 +7,9 @@ public enum ErrorCode {
     USER_EXISTED(1001, "User is existed !!"),
     USERNAME_INVALID(1003, "Username must be at least 3 characters !! "),
     USER_PASSWORD_INVALID(1004, "User password must be at least 3 characters !!"),
-    USER_NOT_EXISTED(1005, "User is not existed !! ");
+    USER_NOT_EXISTED(1005, "User is not existed !! "),
+    INVALID_TOKEN(1006,"The token has been expired !!"),
+    INVALID_SIGNATURE(1007, "The signature is invalid  ");
     private int code;
     private String message ;
 
