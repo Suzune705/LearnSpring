@@ -22,5 +22,22 @@ public class AuthenticationService {
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return true ;
     }
+    public IntrospectResponse introspect(IntrospectRequest request) {
+        String token = request.getToken();
+        try{
+            JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes(StandardCharsets.UTF_8));
+            SignedJWT signedJWT = SignedJWT.parse(token);
+           // expiryDate.getTime() > now.getTime()
+            boolean expiryDate  = signedJWT.getJWTClaimsSet().getExpirationTime().after(new Date()); // new Date : current time ,
+           boolean verified = signedJWT.verify(jwsVerifier);
+           return IntrospectResponse.builder()
+                   .valid(verified && expiryDate)
+                   .build();
+        }catch (JOSEException e){
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+        }catch (ParseException e){
+               throw  new AppException(ErrorCode.INVALID_SIGNATURE);
+        }
+    }
 }
 
