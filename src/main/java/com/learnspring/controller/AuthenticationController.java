@@ -2,17 +2,15 @@ package com.learnspring.controller;
 
 import com.learnspring.dto.request.ApiResponse;
 import com.learnspring.dto.request.AuthenticationRequest;
+import com.learnspring.dto.request.IntrospectRequest;
 import com.learnspring.dto.response.AuthenticationResponse;
+import com.learnspring.dto.response.IntrospectResponse;
 import com.learnspring.service.AuthenticationService;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
 
 
 @RestController
@@ -23,13 +21,16 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService ;
     @PostMapping("/user/log-in")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        boolean check = authenticationService.authenticate(request);
-        var auth = AuthenticationResponse.builder()
-                .authenticated(check)
-                .build();
-
+        AuthenticationResponse check = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder() // create Builder
-                .result(auth) // set result
+                .result(check) // set result
                 .build(); // create ApiResponse object and copy Builder's value to ApiResponse's value
+    }
+    @PostMapping("/user/introspect")
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request){
+        IntrospectResponse check = authenticationService.introspect(request);
+        return  ApiResponse.<IntrospectResponse>builder()
+                .result(check)
+                .build();
     }
 }
