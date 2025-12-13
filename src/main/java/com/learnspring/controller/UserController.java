@@ -19,14 +19,14 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/createUser")
+    @PostMapping("/create")
     ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
         ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.createUserRequest(request));
        return apiResponse;
     }
 
-    @GetMapping()
+    @GetMapping("/getAll")
     public List<UserResponse> getAllUser(){
         return userService.getAllUser();
     }
