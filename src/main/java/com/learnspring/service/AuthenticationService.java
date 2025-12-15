@@ -6,7 +6,7 @@ import com.learnspring.dto.request.IntrospectRequest;
 import com.learnspring.dto.response.AuthenticationResponse;
 import com.learnspring.dto.response.IntrospectResponse;
 import com.learnspring.exception.AppException;
-import com.learnspring.exception.ErrorCode;
+import com.learnspring.enums.ErrorCode;
 import com.learnspring.model.User;
 import com.learnspring.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -14,21 +14,18 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import javax.swing.text.html.Option;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
-import java.util.jar.JarException;
+import java.util.StringJoiner;
 
 @Slf4j
 @Service
@@ -43,21 +40,22 @@ public class AuthenticationService {
         if(!user.getPassword().equals(request.getPassword())){
            throw new AppException(ErrorCode.USER_PASSWORD_INVALID);
         }
-        String token = generateToken(request.getUsername());
+        String token = generateToken(user);
         return  AuthenticationResponse.builder()
                 .token(token)
+                .authenticated(true)
                 .build();
     }
-    private String generateToken(String username){
+    private String generateToken(User user){
         JWSHeader jwtHeader = new JWSHeader(JWSAlgorithm.HS512); // set type of algo
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username) // name or email login account
+                .subject(user.getUsername()) // name or email login account
                 .issuer("learnSpring.com") // domain
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("suzune", "Custom")  // name : user of the token , value can include : userID,role, permissions, ...
+                .claim("scope", buildScope(user))  // name : user of the token , value can include : userID,role, permissions, ...
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject()); // transfer Claim to PayLoad of JWT
 
@@ -88,6 +86,13 @@ public class AuthenticationService {
         }catch (ParseException e){
                throw  new AppException(ErrorCode.INVALID_SIGNATURE);
         }
+    }
+    private String buildScope(User user){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return stringJoiner.toString();
     }
 }
 
