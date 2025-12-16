@@ -1,6 +1,7 @@
-package com.learnspring.exception;
+package com.learnspring.enums;
 
-import java.net.UnknownServiceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 public enum ErrorCode {
 
@@ -17,12 +18,19 @@ public enum ErrorCode {
 
     private int code;
     private String message ;
+    private HttpStatusCode httpStatusCode;
 
-    ErrorCode(int code, String message) {
+    ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
         this.code = code;
         this.message = message;
+        this.httpStatusCode = httpStatusCode;
     }
-
+    public HttpStatusCode getHttpStatusCode(){
+        return httpStatusCode;
+    }
+    public void setHttpStatusCode(HttpStatusCode httpStatusCode){
+        this.httpStatusCode = httpStatusCode;
+    }
     public int getCode() {
         return code;
     }
