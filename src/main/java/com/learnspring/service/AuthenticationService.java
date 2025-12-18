@@ -6,7 +6,7 @@ import com.learnspring.dto.request.IntrospectRequest;
 import com.learnspring.dto.response.AuthenticationResponse;
 import com.learnspring.dto.response.IntrospectResponse;
 import com.learnspring.exception.AppException;
-import com.learnspring.enums.ErrorCode;
+import com.learnspring.enums.ErrorCodeType;
 import com.learnspring.model.User;
 import com.learnspring.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -34,11 +33,12 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY ;
+
     public final AuthenticationResponse authenticate(AuthenticationRequest request){
         User user = userRepository.findByUsername(request.getUsername()).
-                orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                orElseThrow(() -> new AppException(ErrorCodeType.USER_NOT_EXISTED));
         if(!user.getPassword().equals(request.getPassword())){
-           throw new AppException(ErrorCode.USER_PASSWORD_INVALID);
+           throw new AppException(ErrorCodeType.USER_PASSWORD_INVALID);
         }
         String token = generateToken(user);
         return  AuthenticationResponse.builder()
@@ -82,16 +82,16 @@ public class AuthenticationService {
                    .valid(verified && expiryDate)
                    .build();
         }catch (JOSEException e){
-                throw new AppException(ErrorCode.INVALID_TOKEN);
+                throw new AppException(ErrorCodeType.INVALID_TOKEN);
         }catch (ParseException e){
-               throw  new AppException(ErrorCode.INVALID_SIGNATURE);
+               throw  new AppException(ErrorCodeType.INVALID_SIGNATURE);
         }
     }
     private String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if(!CollectionUtils.isEmpty(user.getRoles())){
-            user.getRoles().forEach(stringJoiner::add);
-        }
+//        if(!CollectionUtils.isEmpty(user.getRoles())){
+//            user.getRoles().forEach(stringJoiner::add);
+//        }
         return stringJoiner.toString();
     }
 }

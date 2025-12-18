@@ -3,7 +3,7 @@ package com.learnspring.enums;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-public enum ErrorCode {
+public enum ErrorCodeType {
 
     USER_EXISTED(1001, "User is existed !!", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, "Username must be at least 3 characters !! ", HttpStatus.BAD_REQUEST),
@@ -20,7 +20,7 @@ public enum ErrorCode {
     private String message ;
     private HttpStatusCode httpStatusCode;
 
-    ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
+    ErrorCodeType(int code, String message, HttpStatusCode httpStatusCode) {
         this.code = code;
         this.message = message;
         this.httpStatusCode = httpStatusCode;
