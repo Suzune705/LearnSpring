@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -32,7 +32,7 @@ public class UserController {
         apiResponse.setResult(userService.createUserRequest(request));
        return apiResponse;
     }
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public List<UserResponse> getAllUser(){
         return userService.getAllUser();

@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/auth")  // all endpoints in this class will start with "auth"
+@RequestMapping("/user")  // all endpoints in this class will start with "auth"
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService ;
-    @PostMapping("/user/log-in")
+    @PostMapping("/log-in")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         AuthenticationResponse check = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder() // create Builder
                 .result(check) // set result
                 .build(); // create ApiResponse object and copy Builder's value to ApiResponse's value
     }
-    @PostMapping("/user/introspect")
+    @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request){
         IntrospectResponse check = authenticationService.introspect(request);
         return  ApiResponse.<IntrospectResponse>builder()

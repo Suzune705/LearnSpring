@@ -24,8 +24,8 @@ import java.nio.charset.StandardCharsets;
 @EnableWebSecurity  // allow SecurityFilterChain run before each requests
 @EnableMethodSecurity  // security by method
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {"/users/getAll", "/auth/token", "/users/search/**","/users/create"};
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint ;
+    private final String[] PUBLIC_ENDPOINTS = {"/user/getAll", "/user/log-in", "/user/search/**","/user/create", "/role/create"};
+
     @Value("${jwt.signerKey}")
     private String signerKey ;
     @Bean
@@ -33,7 +33,7 @@ public class SecurityConfig {
 
         AuthenticationEntryPoint authenticationEntryPoint = new JwtAuthenticationEntryPoint();
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(PUBLIC_ENDPOINTS).hasAuthority("ADMIN")       // hasRole read SecurityContextHolder
+                request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()      // hasRole read SecurityContextHolder
                         .anyRequest().permitAll()
                 );
         // active JWT-Mode to verify signature of jwt
