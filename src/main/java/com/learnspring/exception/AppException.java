@@ -1,19 +1,21 @@
 package com.learnspring.exception;
 
+import com.learnspring.enums.ErrorCodeType;
+
 public class AppException extends  RuntimeException{
 
-    private ErrorCode errorCode ;
+    private ErrorCodeType errorCodeType;
 
-    public AppException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public AppException(ErrorCodeType errorCodeType) {
+        super(errorCodeType.getMessage());
+        this.errorCodeType = errorCodeType;
     }
 
-    public ErrorCode getErrorCode(){
-        return this.errorCode;
+    public ErrorCodeType getErrorCode(){
+        return this.errorCodeType;
     }
 
-    public void setErrorCode(ErrorCode errorCode) {
-        this.errorCode = errorCode;
+    public void setErrorCode(ErrorCodeType errorCodeType) {
+        this.errorCodeType = errorCodeType;
     }
 }

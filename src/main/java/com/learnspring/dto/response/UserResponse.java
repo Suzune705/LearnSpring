@@ -1,8 +1,6 @@
 package com.learnspring.dto.response;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.learnspring.model.Role;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,6 +17,6 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDate dob;
-    private Set<String> roles ;
+    private Set<Role> roles ;
  }
 

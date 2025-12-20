@@ -1,6 +1,5 @@
 package com.learnspring.dto.request;
 
-import com.learnspring.exception.ErrorCode;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
